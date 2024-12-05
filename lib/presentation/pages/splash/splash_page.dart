@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/theme/constant/app_icons.dart';
 import '../../routes/route_path.dart';
 
 /// TODO: bloc 로그인 기능
@@ -20,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 2), () {
-      context.go(RoutePath.home);
+      context.go(RoutePath.main);
     });
   }
 
@@ -28,9 +29,9 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: SvgPicture.asset('assets/svg/main_logo.svg')),
+      body: Center(child: SvgPicture.asset(AppIcons.mainLogo)),
       /// TODO: 하드 코딩된 백그라운드 컬러 수정 필요
-      backgroundColor: Color(0xFF5F0080),
+      backgroundColor: Theme.of(context).colorScheme.primary,
     );
   }
 }
