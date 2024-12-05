@@ -1,13 +1,14 @@
+
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class SearchPage extends StatelessWidget {
+  const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        'Home Page',
+        'Search Page',
         style: TextStyle(
           fontSize: 30,
           fontWeight: FontWeight.bold,

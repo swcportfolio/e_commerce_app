@@ -1,89 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/theme/constant/app_icons.dart';
+import '../category/category_page.dart';
+import '../home/home_page.dart';
+import '../search/search_page.dart';
+import '../user/user_page.dart';
+import 'component/top_app_bar/top_app_bar.dart';
+import 'cubit/bottom_nav_cubit.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => BottomNavCubit(),
+      child: MainScreenView(),
+    );
+  }
+}
+
+class MainScreenView extends StatelessWidget {
+  const MainScreenView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(44),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-          color: Theme.of(context).colorScheme.primary,
-          child: AppBar(
-            leading: Container(
-              padding: EdgeInsets.all(8),
-              color: Theme.of(context).colorScheme.primary,
-              child: SvgPicture.asset(
-                AppIcons.mainLogo,
-              ),
-            ),
-            title: const Text('TabBar'),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: SvgPicture.asset(
-                  AppIcons.location,
-                  width: 32,
-                  colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.surface,
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: SvgPicture.asset(
-                  AppIcons.cart,
-                  width: 32,
-                  colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.surface,
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
-            ],
-            backgroundColor: Colors.transparent,
-            leadingWidth: 86,
-          ),
-        ),
+      appBar: TopAppBar(),
+      body: BlocBuilder<BottomNavCubit, BottomNav>(
+        builder: (context, state) {
+          switch (state) {
+            case BottomNav.home:
+              return HomePage();
+            case BottomNav.category:
+              return CategoryPage();
+            case BottomNav.search:
+              return SearchPage();
+            case BottomNav.user:
+              return UserPage();
+          }
+        },
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Main Screen',
+      bottomNavigationBar: BlocBuilder<BottomNavCubit, BottomNav>(
+        builder: (context, state) {
+
+          return BottomNavigationBar(
+            items: List.generate(
+              BottomNav.values.length,
+              (index) => BottomNavigationBarItem(
+                icon: SvgPicture.asset(BottomNav.values[index].icon),
+                label: BottomNav.values[index].label,
+                activeIcon: SvgPicture.asset(BottomNav.values[index].activeIcon),
+              ),
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(AppIcons.navHome),
-              label: 'home',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(AppIcons.navCategory),
-              label: 'category',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(AppIcons.navSearch),
-              label: 'search',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(AppIcons.navUser),
-              label: 'user',
-            ),
-          ],
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
+            onTap: (index) => context.read<BottomNavCubit>().changeIndex(index),
+            currentIndex: state.index,
+            type: BottomNavigationBarType.fixed,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+          );
+        },
       ),
     );
   }
